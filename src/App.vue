@@ -290,6 +290,13 @@ function filtrarPorTipo() {
   font-size: 45px;
 }
 
+.modal-body {
+    position: relative;
+    flex: 1 1 auto;
+    padding: var(--bs-modal-padding);
+    display: flex;
+}
+
 .container{
   display: flex;
   flex-direction: column;
@@ -481,7 +488,7 @@ header{
   margin: 10px;
 }
 .tipo-agua{
-  background-color: hsla(240, 100%, 50%, 0.501);
+  background-color: hsla(240, 100%, 45%, 0.501);
 }
 .tipo-fuego{
   background-color: rgba(255, 166, 0, 0.497);
@@ -548,13 +555,13 @@ header{
   width: 270px;
   background-color: white;
   display: flex;
-  margin-left: 30%;
+  margin-left: -52%;
   justify-content: center;
   align-items: center;
-  border: 1px solid grey;
   -webkit-box-shadow: 2px 2px 10px -3px rgba(0,0,0,0.57);
   -moz-box-shadow: 2px 2px 10px -3px rgba(0,0,0,0.57);
   box-shadow: 2px 2px 10px -3px rgba(0,0,0,0.57);
+  margin-top: 50%;
 }
 .imagenpoke{
   background-color: rgba(128, 128, 128, 0.088);
@@ -566,8 +573,12 @@ header{
   z-index: 10;
 }
 .imagenpoke img{
-  width: 100%;
-  height: 100%;
+  height: 350px;
+}
+.container-debi-type{
+     margin-top: 38%;
+    margin-left: -26%;
+    display: flex;
 }
 .esquina-arriba{
   position: absolute;
