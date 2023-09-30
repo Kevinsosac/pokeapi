@@ -9,7 +9,7 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <p>{{ pokemonSeleccionado ? capitalizeFirstLetter(pokemonSeleccionado.nombre) : '' }}</p>
+            <p id="nombre">{{ pokemonSeleccionado ? capitalizeFirstLetter(pokemonSeleccionado.nombre) : '' }}</p>
             <div class="container-modal-content">
               <div class="container-imagen-poke">
                 <div class="imagenpoke">
@@ -286,7 +286,9 @@ function filtrarPorTipo() {
 
 
 
-
+#nombre{
+  font-size: 45px;
+}
 
 .container{
   display: flex;
@@ -538,11 +540,15 @@ header{
 .btn-warning{
   margin: 10px;
 }
+.container-debi.type{
+  margin-left: 30%;
+}
 .container-imagen-poke{
   height: 270px;
   width: 270px;
   background-color: white;
   display: flex;
+  margin-left: 30%;
   justify-content: center;
   align-items: center;
   border: 1px solid grey;
