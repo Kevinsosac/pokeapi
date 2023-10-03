@@ -33,31 +33,32 @@
               </div>
             </div>
             <section class="habi">
-              <h2>Stast</h2>
-              <h4>Hp:</h4>
-              <div class="contai">
-                <div class="porcen Hp">{{pokemonSeleccionado ? pokemonSeleccionado.hp : ''}}</div>
+              <div class="container-skills">
+              <div class="skill">
+                <p><span>HP</span>{{pokemonSeleccionado ? pokemonSeleccionado.hp :  ''}}</p>
+                <div class="progress" :style="{ '--wth': pokemonSeleccionado ? pokemonSeleccionado.hp + 'px' : 0 }"></div>
               </div>
-              <h4>Attack:</h4>
-              <div class="contai">
-                <div class="porcen Hp">{{pokemonSeleccionado ? pokemonSeleccionado.attack : ''}}</div>
+              <div class="skill">
+                <p><span>Attack</span>{{pokemonSeleccionado ? pokemonSeleccionado.attack : ''}}</p>
+                <div class="progress" :style="{ '--wth': pokemonSeleccionado ? pokemonSeleccionado.attack + 'px' : 0 }"></div>
               </div>
-              <h4>Defense:</h4>
-              <div class="contai">
-                <div class="porcen Hp">{{pokemonSeleccionado ? pokemonSeleccionado.defense : ''}}</div>
+              <div class="skill">
+                <p><span>Defense</span>{{pokemonSeleccionado ? pokemonSeleccionado.defense : ''}}</p>
+                <div class="progress" :style="{ '--wth': pokemonSeleccionado ? pokemonSeleccionado.defense  + 'px' : 0 }"></div>
               </div>
-              <h4>Special Attack:</h4>
-              <div class="contai">
-                <div class="porcen Hp">{{pokemonSeleccionado ? pokemonSeleccionado.special_attack : ''}}</div>
+              <div class="skill">
+                <p><span>Special Attack</span>{{pokemonSeleccionado ? pokemonSeleccionado.special_attack   : ''}}</p>
+                <div class="progress" :style="{ '--wth': pokemonSeleccionado ? pokemonSeleccionado.special_attack + 'px': 0 }"></div>
               </div>
-              <h4>Special defense:</h4>
-              <div class="contai">
-                <div class="porcen Hp">{{pokemonSeleccionado ? pokemonSeleccionado.special_defense : ''}}</div>
+              <div class="skill">
+                <p><span>Special Defense</span>{{pokemonSeleccionado ? pokemonSeleccionado.special_defense  : ''}}</p>
+                <div class="progress" :style="{ '--wth': pokemonSeleccionado ? pokemonSeleccionado.special_defense  + 'px' : 0 }"></div>
               </div>
-              <h4>Speed:</h4>
-              <div class="contai">
-                <div class="porcen Hp">{{pokemonSeleccionado ? pokemonSeleccionado.speed : ''}}</div>
+              <div class="skill">
+                <p><span>Speed</span>{{pokemonSeleccionado ? pokemonSeleccionado.speed : ''}}</p>
+                <div class="progress" :style="{ '--wth': pokemonSeleccionado ? pokemonSeleccionado.speed  + 'px': 0 }"></div>
               </div>
+            </div>
             </section>
           </div>
           <div class="modal-footer">
@@ -93,8 +94,8 @@
       <div class="card" v-for="(pokemon, index) in pokemonsFiltrados" :key="index">
           <div class="card">
   <div class="card__content">
-    <p class="card__title">Card Title
-    </p><p class="card__description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.</p>
+    <p class="card__title">
+    </p><p class="card__description"></p>
   </div>
 </div>
         <div class="imagen-fondo">
@@ -305,6 +306,34 @@ function filtrarPorTipo() {
   align-content: center;
   width: 100%;
   background-image: url('pika.png');
+}
+
+.container-skills .skill{
+  margin: 20px 0;
+}
+
+.container-skills .skill p{
+  width: 300px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.container-skills .skill .progress{
+  position: relative;
+  width: 100%;
+  height: 6px;
+  background: #999;
+  border-radius:6px ;
+  overflow: hidden;
+  margin: 5px 0;
+}
+
+.container-skills .skill .progress::before{
+  content:'' ;
+  position: absolute;
+  width: var(--wth, 0px); 
+  height: 100%;
+  background: #0280fe;
 }
 
 header{
