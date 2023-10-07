@@ -69,27 +69,31 @@
     <!-- Pokedex -->
     <header>
       <div class="titulo">
-        
-      </div>
+          <a href="#" class="pokedex"><img src="/src/assets/Pokedex.png" alt="" data-v-7a7a37b1="">
+          </a>
+        </div>
     </header>
     <div class="busquedas">
-      <div class="filtro">
-      <label for="tipoFiltro" class="visually-hidden">Selecciona un tipo:</label>
-      <select v-model="tipoFiltro" id="tipoFiltro" class="form-select" @change="filtrarPorTipo">
-        <option value="">Todos los tipos</option>
-        <option v-for="tipo in tiposDisponibles" :key="tipo" :value="tipo">
-          {{ capitalizeFirstLetter(tipo) }}
-        </option>
-      </select>
-    </div>
-      <div class="input-pokemon">
-      <input v-model="searchTerm" type="text" placeholder="Escribe el nombre del Pokémon">
-      <button @click="buscarPokemon" type="button" class="btn btn-primary">
-        <i class="fa-solid fa-magnifying-glass"></i>
-      </button>
-    </div>
-    </div>
+  <div class="filtro">
+  <label for="tipoFiltro" class="visually-hidden">Selecciona un tipo:</label>
+  <select v-model="tipoFiltro" id="tipoFiltro" class="form-select" @change="filtrarPorTipo">
+    <option value="">Todos los tipos</option> <!-- Nueva opción -->
+    <option v-for="tipo in tiposDisponibles" :key="tipo" :value="tipo">
+      {{ capitalizeFirstLetter(tipo) }}
+    </option>
+  </select>
+</div>
+  <div class="input-pokemon">
+    <input v-model="searchTerm" type="text" placeholder="Escribe el nombre del Pokémon">
+    <button @click="buscarPokemon" type="button" class="btn btn-primary">
+      <i class="fa-solid fa-magnifying-glass"></i>
+    </button>
+  </div>
+</div>
     <div class="container-cards">
+       <div v-if="pokemonsFiltrados.length === 0">
+    <p>No hay Pokémon del tipo seleccionado.</p>
+  </div>
       <div class="card" v-for="(pokemon, index) in pokemonsFiltrados" :key="index">
           <div class="card">
   <div class="card__content">
@@ -114,7 +118,7 @@
         </div>
       </div>
     </div>
-    <button type="button" class="btn btn-warning" @click="mostrarmas()">Mostrar mas pokemones</button>
+    <button type="button" class="btn btn-warning" @click="mostrarMas">Mostrar más pokemones</button>
     <footer>
     </footer>
   </div>
@@ -122,14 +126,35 @@
 
 <script setup>
 import axios from 'axios'
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, computed, watch } from 'vue';
 
 let pokemons = ref([]);
+let pokemonsFiltrados = ref([]);
 let searchTerm = ref('');
-let tiposDisponibles = ["water", "fire", "grass", "electric", "ice", "fighting", "poison", "ground", "flying", "psychic", "bug", "rock", "ghost", "dragon", "dark", "steel", "fairy", "normal"];
 let link = ref('https://pokeapi.co/api/v2/pokemon?limit=50&offset=0');
+let tipoFiltro = ref('');
 
+// Calcula los tipos disponibles en todos los Pokémon
+const tiposDisponibles = computed(() => {
+  let tipos = new Set(['Todos los tipos']); // Agrega la opción "Todos los tipos"
+  pokemons.value.forEach(pokemon => {
+    pokemon.tipos.forEach(tipo => tipos.add(tipo.name));
+  });
+  return Array.from(tipos);
+});
 
+// Función para filtrar los Pokémon por tipo
+const filtrarPorTipo = () => {
+  if (tipoFiltro.value === '') {
+    // Si no hay un tipo seleccionado, muestra todos los Pokémon
+    pokemonsFiltrados.value = pokemons.value;
+  } else {
+    // Filtra los Pokémon por el tipo seleccionado
+    pokemonsFiltrados.value = pokemons.value.filter(pokemon =>
+      pokemon.tipos.some(tipo => tipo.name === tipoFiltro.value)
+    );
+  }
+};
 async function obtenerPokemon(url) {
   try {
     let r = await axios.get(url);
@@ -221,7 +246,7 @@ function seleccionarPokemon(pokemon) {
   pokemonSeleccionado.value = pokemon; 
 }
 
-const pokemonsFiltrados = computed(() => {
+const pokemonsFiltrados1 = computed(() => {
   if (searchTerm.value.trim() === '') {
     return pokemons.value;
   } else {
@@ -260,7 +285,7 @@ async function buscarPokemon() {
   }
 }
 
-async function mostrarmas() {
+const mostrarMas = async () => {
   try {
     let pokemonsResponse = await axios.get(link.value);
     let pokemonUrls = pokemonsResponse.data.results.map((pokemon) => pokemon.url);
@@ -271,13 +296,24 @@ async function mostrarmas() {
 
     // Actualizar el enlace para cargar los siguientes 50 Pokémon
     link.value = pokemonsResponse.data.next;
+
+    // Actualizar la lista de pokemonsFiltrados después de cargar más Pokémon
+    filtrarPorTipo();
   } catch (error) {
     console.error('Error al cargar más Pokémon:', error);
   }
-}
-function filtrarPorTipo() {
-  // Puedes realizar acciones adicionales si es necesario
-}
+};
+onMounted(() => {
+  // Obtener la lista inicial de Pokémon
+  obtenerPokemons();
+  // Observar cambios en tipoFiltro y filtrar automáticamente
+  watch(tipoFiltro, filtrarPorTipo);
+});
+
+
+watch(tipoFiltro, filtrarPorTipo);
+
+
 </script>
 
 <style scoped>
