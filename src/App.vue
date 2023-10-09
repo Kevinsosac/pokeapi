@@ -91,10 +91,10 @@
   </div>
 </div>
     <div class="container-cards">
-       <div v-if="pokemonsFiltrados.length === 0">
+      <div v-if="pokemonsFiltrados.length === 0">
     <p>No hay Pokémon del tipo seleccionado.</p>
   </div>
-      <div class="card" v-for="(pokemon, index) in pokemonsFiltrados" :key="index">
+  <div class="card" v-for="(pokemon, index) in pokemonsFiltrados" :key="index">
           <div class="card">
   <div class="card__content">
     <p class="card__title">
@@ -136,7 +136,7 @@ let tipoFiltro = ref('');
 
 // Calcula los tipos disponibles en todos los Pokémon
 const tiposDisponibles = computed(() => {
-  let tipos = new Set(['Todos los tipos']); // Agrega la opción "Todos los tipos"
+  let tipos = new Set([]); // Agrega la opción "Todos los tipos"
   pokemons.value.forEach(pokemon => {
     pokemon.tipos.forEach(tipo => tipos.add(tipo.name));
   });
@@ -246,44 +246,29 @@ function seleccionarPokemon(pokemon) {
   pokemonSeleccionado.value = pokemon; 
 }
 
-const pokemonsFiltrados1 = computed(() => {
-  if (searchTerm.value.trim() === '') {
-    return pokemons.value;
+
+
+const buscarPokemon = () => {
+  const busqueda = searchTerm.value.toLowerCase().trim();
+
+  if (busqueda === '') {
+    // Si la búsqueda está vacía, mostrar todos los Pokémon
+    pokemonsFiltrados.value = pokemons.value;
   } else {
-    const searchTermLower = searchTerm.value.toLowerCase();
-    return pokemons.value.filter(pokemon =>
-      pokemon.nombre.toLowerCase().includes(searchTermLower)
-    );
+    // Crear un objeto para realizar el filtrado único por número de Pokémon
+    const pokemonsUnicos = {};
+    
+    // Filtrar los Pokémon por nombre y agregarlos al objeto de Pokémon únicos
+    pokemons.value.filter(pokemon =>
+      pokemon.nombre.toLowerCase().includes(busqueda)
+    ).forEach(pokemon => {
+      pokemonsUnicos[pokemon.numero] = pokemon;
+    });
+
+    // Convertir el objeto de Pokémon únicos de nuevo a un array
+    pokemonsFiltrados.value = Object.values(pokemonsUnicos);
   }
-});
-
-async function buscarPokemon() {
-  if (searchTerm.value.trim() !== '') {
-    try {
-      let respuesta = await axios.get(`https://pokeapi.co/api/v2/pokemon/${searchTerm.value.toLowerCase()}`);
-      let pokemon = respuesta.data;
-
-      // Limpiar el término de búsqueda
-      searchTerm.value = '';
-
-      // Mostrar el modal con los detalles del Pokémon encontrado
-      seleccionarPokemon({
-        imagen: pokemon.sprites.other['official-artwork'].front_default,
-        nombre: pokemon.name,
-        numero: pokemon.id,
-        tipos: pokemon.types.map(type => type.type.name),
-        hp: pokemon.stats[0].base_stat,
-        attack: pokemon.stats[1].base_stat,
-        defense: pokemon.stats[2].base_stat,
-        special_attack: pokemon.stats[3].base_stat,
-        special_defense: pokemon.stats[4].base_stat,
-        speed: pokemon.stats[5].base_stat,
-      });
-    } catch (error) {
-      console.error('Error al buscar el Pokémon:', error);
-    }
-  }
-}
+};
 
 const mostrarMas = async () => {
   try {
