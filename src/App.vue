@@ -156,6 +156,7 @@ const filtrarPorTipo = () => {
   }
 };
 async function obtenerPokemon(url) {
+  console.log("h");
   try {
     let r = await axios.get(url);
     console.log(r);
@@ -271,7 +272,7 @@ const buscarPokemon = () => {
 };
 
 const mostrarMas = async () => {
-  try {
+  try {console.log(link.value);
     let pokemonsResponse = await axios.get(link.value);
     let pokemonUrls = pokemonsResponse.data.results.map((pokemon) => pokemon.url);
 
@@ -289,9 +290,6 @@ const mostrarMas = async () => {
   }
 };
 onMounted(() => {
-  // Obtener la lista inicial de Pokémon
-  obtenerPokemons();
-  // Observar cambios en tipoFiltro y filtrar automáticamente
   watch(tipoFiltro, filtrarPorTipo);
 });
 
